@@ -1,11 +1,14 @@
 #!/bin/bash
 set -euo pipefail
 
-mkdir -p /root/.config/opencode
-mkdir -p /workspace
+CONFIG_DIR=/root/.config/opencode
+WORKSPACE_DIR=/workspace
 
-if [ ! -f /root/.config/opencode/opencode.json ] && [ ! -f /root/.config/opencode/opencode.jsonc ]; then
-  cp /usr/local/share/opencode/opencode.json.example /root/.config/opencode/opencode.json
+mkdir -p "$CONFIG_DIR"
+mkdir -p "$WORKSPACE_DIR"
+
+if [ ! -f "$CONFIG_DIR/opencode.json" ] && [ ! -f "$CONFIG_DIR/opencode.jsonc" ]; then
+  cp /usr/local/share/opencode/opencode.json.example "$CONFIG_DIR/opencode.json"
 fi
 
 exec opencode serve --hostname 0.0.0.0 --port 4096

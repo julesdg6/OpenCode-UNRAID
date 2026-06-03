@@ -30,8 +30,6 @@ Template defaults:
   - `OPENCODE_SERVER_PASSWORD`
   - `TZ`
 
-## Runtime behavior
-
 ## Included tools
 
 The image bakes dependencies at build time (not startup):
@@ -48,6 +46,8 @@ The image bakes dependencies at build time (not startup):
 - procps
 
 Python is included because many MCP servers are distributed as Python packages.
+
+## Runtime behavior
 
 The container starts with:
 
