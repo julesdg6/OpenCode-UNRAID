@@ -55,7 +55,7 @@ The container starts with:
 opencode serve --hostname 0.0.0.0 --port 4096
 ```
 
-On first boot, if no `opencode.json` or `opencode.jsonc` exists, it seeds `/root/.config/opencode/opencode.json` from `opencode.json.example` so MCP/provider config can be edited immediately without `opencode mcp add` surgery.
+On first boot, if no `opencode.json` or `opencode.jsonc` exists, it seeds `/root/.config/opencode/opencode.json` from `opencode.json.example` so MCP/provider config can be edited immediately without needing to run `opencode mcp add` commands after deployment.
 
 Set `OPENCODE_SERVER_PASSWORD` when exposing the service outside a trusted LAN, and use your network firewall/reverse proxy controls as needed because the server binds to all interfaces (`0.0.0.0`).
 
@@ -72,6 +72,8 @@ docker exec -it OpenCode bash -lc 'opencode mcp list'
 ```
 
 ## Update opencode.json
+
+The example uses `{env:CONTEXT7_API_KEY}` in MCP headers; OpenCode resolves this from the matching container environment variable at runtime.
 
 Edit your persisted config file at:
 
