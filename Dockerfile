@@ -14,7 +14,7 @@ RUN apt-get update \
       procps \
     && rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g opencode-ai
+RUN npm install -g opencode-ai@1.15.13
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY opencode.json.example /usr/local/share/opencode/opencode.json.example
