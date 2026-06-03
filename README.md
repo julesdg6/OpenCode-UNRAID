@@ -43,7 +43,7 @@ On first boot, if no config exists, it seeds `/root/.config/opencode/opencode.js
 ## Test
 
 ```bash
-curl http://192.168.1.64:4096
+curl http://[IP]:4096
 ```
 
 ## Verify MCP
@@ -72,5 +72,5 @@ docker restart OpenCode
 docker logs --tail 100 OpenCode
 docker exec -it OpenCode bash -lc 'opencode mcp list'
 docker exec -it OpenCode bash -lc 'cat /root/.config/opencode/opencode.json'
-curl http://192.168.1.64:4096
+curl http://[IP]:4096
 ```
