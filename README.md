@@ -64,7 +64,7 @@ On first boot, if no `opencode.json` or `opencode.jsonc` exists, it seeds `/root
 
 ## Ollama endpoint note
 
-The seeded `local_ollama` provider uses `http://127.0.0.1:11434/v1` as a local default. If Ollama runs outside this container, update `opencode.json` to your reachable Ollama host endpoint before use.
+The seeded `local_ollama` provider uses `http://127.0.0.1:11434/v1` as a local default (only valid when Ollama is reachable as localhost from this container). If Ollama runs outside this container, update `opencode.json` to your reachable host endpoint, for example `http://192.168.1.100:11434/v1` or `http://ollama:11434/v1` depending on your network setup.
 
 ## Test
 
