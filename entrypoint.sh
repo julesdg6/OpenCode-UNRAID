@@ -23,6 +23,7 @@ fi
 
 opencode serve --hostname "$OPENCODE_HOSTNAME" --port "$OPENCODE_PORT" &
 opencode_pid=$!
+mcp_proxy_pid=""
 
 export OPENCODE_BASE_URL="${OPENCODE_BASE_URL:-http://127.0.0.1:${OPENCODE_PORT}}"
 export OPENCODE_AUTO_SERVE=false
@@ -31,16 +32,48 @@ if [ -n "${GATEWAY_MCP_API_KEY:-}" ] && [ -z "${MCP_PROXY_API_KEY:-}" ]; then
   export MCP_PROXY_API_KEY="$GATEWAY_MCP_API_KEY"
 fi
 
+wait_for_opencode() {
+  local retries=60
+  while [ "$retries" -gt 0 ]; do
+    if ! kill -0 "$opencode_pid" 2>/dev/null; then
+      echo "opencode serve exited before becoming ready" >&2
+      return 1
+    fi
+    if curl -s --max-time 1 -o /dev/null "http://127.0.0.1:${OPENCODE_PORT}" 2>/dev/null; then
+      return 0
+    fi
+    retries=$((retries - 1))
+    sleep 1
+  done
+
+  echo "Timed out waiting for opencode serve on 127.0.0.1:${OPENCODE_PORT}" >&2
+  return 1
+}
+
+if ! wait_for_opencode; then
+  kill "$opencode_pid" 2>/dev/null || true
+  wait "$opencode_pid" 2>/dev/null || true
+  exit 1
+fi
+
 mcp-proxy --port "$GATEWAY_MCP_PORT" --server stream --streamEndpoint "$GATEWAY_MCP_ENDPOINT" -- opencode-mcp &
 mcp_proxy_pid=$!
 
 cleanup() {
-  for pid in "$opencode_pid" "$mcp_proxy_pid"; do
+  for pid in "$opencode_pid" "${mcp_proxy_pid:-}"; do
+    if [ -z "$pid" ]; then
+      continue
+    fi
     if kill -0 "$pid" 2>/dev/null; then
       kill "$pid" 2>/dev/null || true
     fi
   done
-  wait "$opencode_pid" "$mcp_proxy_pid" 2>/dev/null || true
+  if [ -n "${opencode_pid:-}" ]; then
+    wait "$opencode_pid" 2>/dev/null || true
+  fi
+  if [ -n "${mcp_proxy_pid:-}" ]; then
+    wait "$mcp_proxy_pid" 2>/dev/null || true
+  fi
 }
 
 trap cleanup TERM INT

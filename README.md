@@ -88,6 +88,8 @@ opencode serve --hostname 0.0.0.0 --port 4096
 mcp-proxy --port 4097 --server stream --streamEndpoint /mcp -- opencode-mcp
 ```
 
+Entrypoint starts `opencode serve` first, waits until `http://127.0.0.1:4096` is reachable, then launches `opencode-mcp` on the gateway.
+
 On first boot, if no `opencode.json` or `opencode.jsonc` exists, it seeds `/root/.config/opencode/opencode.json` from `opencode.json.example` so MCP/provider config can be edited immediately without needing to run `opencode mcp add` commands after deployment.
 
 Gateway environment variables:
