@@ -46,10 +46,15 @@ Then in the Unraid Docker UI, click **Add Container** and select the **OpenCode*
 Template defaults:
 
 - Port: host `4096` -> container `4096`
+- Gateway MCP port: host `4097` -> container `4097`
 - Config path: `/mnt/user/appdata/opencode/config` -> `/root/.config/opencode`
 - Workspace path: `/mnt/user/appdata/opencode/workspace` -> `/workspace`
 - Optional variables:
   - `OPENCODE_SERVER_PASSWORD`
+  - `GATEWAY_MCP_ENABLED` (`true`/`false`)
+  - `GATEWAY_MCP_PORT` (default `4097`)
+  - `GATEWAY_MCP_ENDPOINT` (default `/mcp`)
+  - `GATEWAY_MCP_API_KEY` (gateway `X-API-Key` auth)
   - `TZ`
 
 ## Included tools
@@ -66,23 +71,48 @@ The image bakes dependencies at build time (not startup):
 - ca-certificates
 - less
 - procps
+- opencode-mcp
+- mcp-proxy
 
 Python is included because many MCP servers are distributed as Python packages.
 
 ## Runtime behavior
 
-The container starts with:
+The container starts:
 
 ```bash
+# OpenCode API/UI
 opencode serve --hostname 0.0.0.0 --port 4096
+
+# Dedicated MCP gateway (streamable HTTP)
+mcp-proxy --port 4097 --server stream --streamEndpoint /mcp -- opencode-mcp
 ```
 
 On first boot, if no `opencode.json` or `opencode.jsonc` exists, it seeds `/root/.config/opencode/opencode.json` from `opencode.json.example` so MCP/provider config can be edited immediately without needing to run `opencode mcp add` commands after deployment.
 
+Gateway environment variables:
+
+- `GATEWAY_MCP_ENABLED` (default `true`)
+- `GATEWAY_MCP_PORT` (default `4097`)
+- `GATEWAY_MCP_ENDPOINT` (default `/mcp`)
+- `GATEWAY_MCP_API_KEY` (optional; mapped to `MCP_PROXY_API_KEY`)
+- `OPENCODE_BASE_URL` (optional override, defaults to `http://127.0.0.1:${OPENCODE_PORT}`)
+
+Hermes/OpenClaw streamable HTTP example:
+
+```yaml
+opencode:
+  enabled: true
+  transport: streamable_http
+  url: http://OPENCODE_HOST:4097/mcp
+```
+
+If `GATEWAY_MCP_API_KEY` is set, configure your client to send `X-API-Key`.
+
 
 ## Security warning
 
-`opencode serve --hostname 0.0.0.0` listens on all container interfaces. If you publish port 4096 beyond localhost, treat `OPENCODE_SERVER_PASSWORD` as required and keep network controls (firewall/reverse proxy) in place.
+`opencode serve --hostname 0.0.0.0` and the MCP gateway listen on container interfaces. If you publish ports `4096` and/or `4097` beyond localhost, treat `OPENCODE_SERVER_PASSWORD` and `GATEWAY_MCP_API_KEY` as required and keep network controls (firewall/reverse proxy) in place.
 
 ## Ollama endpoint note
 
@@ -92,12 +122,20 @@ The seeded `local_ollama` provider uses `http://127.0.0.1:11434/v1` as a local d
 
 ```bash
 curl http://[IP]:4096
+curl -sS -X POST http://[IP]:4097/mcp \
+  -H 'accept: application/json, text/event-stream' \
+  -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"smoke","version":"0.0.0"}}}'
 ```
 
 ## Verify MCP
 
 ```bash
 docker exec -it OpenCode bash -lc 'opencode mcp list'
+curl -sS -X POST http://[IP]:4097/mcp \
+  -H 'accept: application/json, text/event-stream' \
+  -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"verify","version":"0.0.0"}}}'
 ```
 
 ## Update opencode.json
@@ -123,4 +161,8 @@ docker logs --tail 100 OpenCode
 docker exec -it OpenCode bash -lc 'opencode mcp list'
 docker exec -it OpenCode bash -lc 'cat /root/.config/opencode/opencode.json'
 curl http://[IP]:4096
+curl -i -X POST http://[IP]:4097/mcp \
+  -H 'accept: application/json, text/event-stream' \
+  -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"diag","version":"0.0.0"}}}'
 ```

@@ -9,7 +9,7 @@
   <Privileged>false</Privileged>
   <Support>https://github.com/julesdg6/OpenCode-UNRAID</Support>
   <Project>https://github.com/sst/opencode</Project>
-  <Overview>Unraid container for OpenCode server with MCP-ready persistent config.</Overview>
+  <Overview>Unraid container for OpenCode server with an MCP gateway service for external clients.</Overview>
   <Category>Network:Web</Category>
   <WebUI>http://[IP]:[PORT:4096]/</WebUI>
   <Icon>https://opencode.ai/favicon-96x96-v3.png</Icon>
@@ -19,11 +19,16 @@
   <DateInstalled/>
   <DonateText/>
   <DonateLink/>
-  <Description>Runs opencode serve on port 4096 with persistent /root/.config/opencode and /workspace mounts.</Description>
+  <Description>Runs OpenCode on port 4096 and a streamable HTTP MCP gateway on port 4097 with persistent /root/.config/opencode and /workspace mounts.</Description>
 
   <Config Name="WebUI Port" Target="4096" Default="4096" Mode="tcp" Description="Container port for OpenCode web UI" Type="Port" Display="always" Required="true" Mask="false">4096</Config>
+  <Config Name="Gateway MCP Port" Target="4097" Default="4097" Mode="tcp" Description="Container port for streamable HTTP MCP gateway endpoint" Type="Port" Display="always" Required="true" Mask="false">4097</Config>
   <Config Name="Config Directory" Target="/root/.config/opencode" Default="/mnt/user/appdata/opencode/config" Mode="rw" Description="Persistent OpenCode config directory" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/opencode/config</Config>
   <Config Name="Workspace Directory" Target="/workspace" Default="/mnt/user/appdata/opencode/workspace" Mode="rw" Description="Persistent OpenCode workspace" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/opencode/workspace</Config>
   <Config Name="OpenCode Server Password" Target="OPENCODE_SERVER_PASSWORD" Default="" Mode="" Description="Optional password for OpenCode server" Type="Variable" Display="always" Required="false" Mask="true"/>
+  <Config Name="Enable MCP Gateway" Target="GATEWAY_MCP_ENABLED" Default="true" Mode="" Description="Enable dedicated MCP gateway service (true/false)" Type="Variable" Display="always" Required="false" Mask="false">true</Config>
+  <Config Name="MCP Gateway Internal Port" Target="GATEWAY_MCP_PORT" Default="4097" Mode="" Description="Gateway listener port inside container (match port mapping target)" Type="Variable" Display="advanced" Required="false" Mask="false">4097</Config>
+  <Config Name="MCP Gateway Endpoint" Target="GATEWAY_MCP_ENDPOINT" Default="/mcp" Mode="" Description="Gateway streamable HTTP endpoint path" Type="Variable" Display="advanced" Required="false" Mask="false">/mcp</Config>
+  <Config Name="MCP Gateway API Key" Target="GATEWAY_MCP_API_KEY" Default="" Mode="" Description="Optional X-API-Key required by MCP gateway clients" Type="Variable" Display="advanced" Required="false" Mask="true"/>
   <Config Name="Timezone" Target="TZ" Default="" Mode="" Description="Optional timezone, e.g. America/New_York" Type="Variable" Display="advanced" Required="false" Mask="false"/>
 </Container>
