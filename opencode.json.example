@@ -9,8 +9,8 @@
         "apiKey": "ollama"
       },
       "models": {
-        "gpt-oss:20b": {
-          "name": "gpt-oss:20b"
+        "llama3.2": {
+          "name": "llama3.2"
         }
       }
     }

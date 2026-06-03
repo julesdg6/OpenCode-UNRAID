@@ -32,13 +32,30 @@ Template defaults:
 
 ## Runtime behavior
 
+## Included tools
+
+The image bakes dependencies at build time (not startup):
+
+- bash
+- git
+- curl
+- jq
+- python3
+- python3-pip
+- ripgrep
+- ca-certificates
+- less
+- procps
+
+Python is included because many MCP servers are distributed as Python packages.
+
 The container starts with:
 
 ```bash
 opencode serve --hostname 0.0.0.0 --port 4096
 ```
 
-On first boot, if no config exists, it seeds `/root/.config/opencode/opencode.json` from `opencode.json.example` so MCP/provider config can be edited immediately without `opencode mcp add` surgery.
+On first boot, if no `opencode.json` or `opencode.jsonc` exists, it seeds `/root/.config/opencode/opencode.json` from `opencode.json.example` so MCP/provider config can be edited immediately without `opencode mcp add` surgery.
 
 ## Test
 
