@@ -57,7 +57,14 @@ opencode serve --hostname 0.0.0.0 --port 4096
 
 On first boot, if no `opencode.json` or `opencode.jsonc` exists, it seeds `/root/.config/opencode/opencode.json` from `opencode.json.example` so MCP/provider config can be edited immediately without needing to run `opencode mcp add` commands after deployment.
 
-Set `OPENCODE_SERVER_PASSWORD` when exposing the service outside a trusted LAN, and use your network firewall/reverse proxy controls as needed because the server binds to all interfaces (`0.0.0.0`).
+
+## Security warning
+
+`opencode serve --hostname 0.0.0.0` listens on all container interfaces. If you publish port 4096 beyond localhost, treat `OPENCODE_SERVER_PASSWORD` as required and keep network controls (firewall/reverse proxy) in place.
+
+## Ollama endpoint note
+
+The seeded `local_ollama` provider uses `http://127.0.0.1:11434/v1` as a local default. If Ollama runs outside this container, update `opencode.json` to your reachable Ollama host endpoint before use.
 
 ## Test
 
