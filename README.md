@@ -8,14 +8,36 @@ Unraid-compatible Docker image and template for running OpenCode as a persistent
 - `entrypoint.sh`
 - `opencode.json.example`
 - `unraid/opencode.xml`
+- `.github/workflows/build.yml`
 
-## Build on Unraid
+## Pull or Build
+
+The pre-built image is published to GitHub Container Registry on every push to `main`:
+
+```bash
+docker pull ghcr.io/julesdg6/opencode-unraid:latest
+```
+
+To build locally instead:
 
 ```bash
 docker build -t opencode-unraid:local .
 ```
 
 ## Install the template in Unraid
+
+### Unraid 7 (recommended — curl method)
+
+Run the following command from an Unraid terminal to download the template directly to the correct location:
+
+```bash
+curl -L -o /boot/config/plugins/dockerMan/templates-user/opencode.xml \
+  https://raw.githubusercontent.com/julesdg6/OpenCode-UNRAID/main/unraid/opencode.xml
+```
+
+Then in the Unraid Docker UI, click **Add Container** and select the **OpenCode** template.
+
+### Manual install
 
 1. Copy `unraid/opencode.xml` into your Unraid templates path.
    - Typical path: `/boot/config/plugins/dockerMan/templates-user/`

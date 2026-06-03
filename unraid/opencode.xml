@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Container version="2">
   <Name>OpenCode</Name>
-  <Repository>opencode-unraid:local</Repository>
+  <Repository>ghcr.io/julesdg6/opencode-unraid:latest</Repository>
   <Registry/>
   <Network>bridge</Network>
   <MyIP/>
