@@ -98,6 +98,7 @@ Gateway environment variables:
 - `GATEWAY_MCP_PORT` (default `4097`)
 - `GATEWAY_MCP_ENDPOINT` (default `/mcp`)
 - `GATEWAY_MCP_API_KEY` (optional; mapped to `MCP_PROXY_API_KEY`)
+- `OPENCODE_READINESS_TIMEOUT` (default `60` seconds before failing gateway startup)
 - `OPENCODE_BASE_URL` (optional override, defaults to `http://127.0.0.1:${OPENCODE_PORT}`)
 
 Hermes/OpenClaw streamable HTTP example:
