@@ -14,7 +14,10 @@ RUN apt-get update \
       procps \
     && rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g opencode-ai@1.15.13
+RUN npm install -g \
+      opencode-ai@1.15.13 \
+      opencode-mcp@1.11.0 \
+      mcp-proxy@6.5.1
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY opencode.json.example /usr/local/share/opencode/opencode.json.example
@@ -22,7 +25,7 @@ COPY opencode.json.example /usr/local/share/opencode/opencode.json.example
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 WORKDIR /workspace
-EXPOSE 4096
+EXPOSE 4096 4097
 VOLUME ["/root/.config/opencode", "/workspace"]
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
