@@ -57,6 +57,8 @@ opencode serve --hostname 0.0.0.0 --port 4096
 
 On first boot, if no `opencode.json` or `opencode.jsonc` exists, it seeds `/root/.config/opencode/opencode.json` from `opencode.json.example` so MCP/provider config can be edited immediately without `opencode mcp add` surgery.
 
+Set `OPENCODE_SERVER_PASSWORD` when exposing the service outside a trusted LAN, and use your network firewall/reverse proxy controls as needed because the server binds to all interfaces (`0.0.0.0`).
+
 ## Test
 
 ```bash
