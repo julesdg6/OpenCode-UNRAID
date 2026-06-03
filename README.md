@@ -107,6 +107,8 @@ opencode:
   url: http://OPENCODE_HOST:4097/mcp
 ```
 
+Replace `OPENCODE_HOST` with your OpenCode host/IP (for example `192.168.1.100`).
+
 If `GATEWAY_MCP_API_KEY` is set, configure your client to send `X-API-Key`.
 
 
