@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>OpenCode</Name>
+  <Repository>opencode-unraid:local</Repository>
+  <Registry/>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>bash</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/julesdg6/OpenCode-UNRAID</Support>
+  <Project>https://github.com/sst/opencode</Project>
+  <Overview>Unraid container for OpenCode server with MCP-ready persistent config.</Overview>
+  <Category>Network:Web</Category>
+  <WebUI>http://[IP]:[PORT:4096]/</WebUI>
+  <Icon>https://raw.githubusercontent.com/docker-library/docs/master/logo.png</Icon>
+  <ExtraParams/>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled/>
+  <DonateText/>
+  <DonateLink/>
+  <Description>Runs opencode serve on port 4096 with persistent /root/.config/opencode and /workspace mounts.</Description>
+
+  <Config Name="WebUI Port" Target="4096" Default="4096" Mode="tcp" Description="Container port for OpenCode web UI" Type="Port" Display="always" Required="true" Mask="false">4096</Config>
+  <Config Name="Config Directory" Target="/root/.config/opencode" Default="/mnt/user/appdata/opencode/config" Mode="rw" Description="Persistent OpenCode config directory" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/opencode/config</Config>
+  <Config Name="Workspace Directory" Target="/workspace" Default="/mnt/user/appdata/opencode/workspace" Mode="rw" Description="Persistent OpenCode workspace" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/opencode/workspace</Config>
+  <Config Name="OpenCode Server Password" Target="OPENCODE_SERVER_PASSWORD" Default="" Mode="" Description="Optional password for OpenCode server" Type="Variable" Display="always" Required="false" Mask="true"/>
+  <Config Name="Timezone" Target="TZ" Default="" Mode="" Description="Optional timezone, e.g. America/New_York" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+</Container>
